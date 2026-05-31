@@ -1,12 +1,10 @@
 /**********************************************************************
- * [leetcode] Two Sum
- * File: 01_two_sum_v1.cpp (Embedded version)
+ * [leetcode] Move Zeros
+ * File: 01_move_zeros_v1.cpp (Embedded version)
  *
- * Given an array of integers nums and an integer target,
- * return indices of the two numbers such that they add up to target.
- * You may assume that each input would have exactly one solution,
- * and you may not use the same element twice.
- * You can return the answer in any order. *
+ * Given an integer array nums, move all 0's to the end of it
+ * while maintaining the relative order of the non-zero elements. 
+ * Note that you must do this in-place without making a copy of the array.
  **********************************************************************/
 
 #include <iostream>
@@ -17,7 +15,7 @@
 //---------------------------------------------------------------------
 // Configuration
 //---------------------------------------------------------------------
-constexpr std::size_t MAX_SIZE = 100;
+constexpr int MAX_SIZE = 100;
 
 //---------------------------------------------------------------------
 // Logging (disable in production)
@@ -41,36 +39,30 @@ enum class Status {
 //---------------------------------------------------------------------
 // Utility functions
 //---------------------------------------------------------------------
-inline bool is_valid_index(std::size_t idx, std::size_t size)
-{
-	return idx < size;
-}
 
 //---------------------------------------------------------------------
-// Core logic: Two Sum (embedded style)
+// Core logic: Move Zeros (embedded style)
 //---------------------------------------------------------------------
-Status two_sum( const int* arr,
-		std::size_t size,
-		int target,
-		int& out_i,
-		int& out_j )
+Status move_zeros( int* arr, std::size_t size)
 {
-	if( !arr || 0 == size ) {
+	if( !arr || size == 0 ) {
 		return Status::ERROR_INVALID_PARAM;
 	}
 
-	for( std::size_t i = 0; i < size; ++i ) {
-		for( std::size_t j = i + 1; j < size; ++j ) {
-			if( target == arr[i] + arr[j] ) {
-				out_i = static_cast<int>(i);
-				out_j = static_cast<int>(j);
+	std::size_t j = 0;	//position of first zero
 
-				return Status::OK;
+	for( std::size_t i = 0; i < size; ++i ) {
+		if( arr[i] != 0) {
+			if( i != j ) {
+				int tmp = arr[i];
+				arr[i] = arr[j];
+				arr[j] = tmp;
 			}
+			++j;
 		}
 	}
 
-	return Status::ERROR_NOT_FOUND;
+	return Status::OK;
 }
 
 //---------------------------------------------------------------------
@@ -78,21 +70,22 @@ Status two_sum( const int* arr,
 //---------------------------------------------------------------------
 int main(int argc, char** argv)
 {
-	int data[MAX_SIZE] = {2, 7, 11, 15};
-	std:size_t size = 4;
+	int data[MAX_SIZE] = {0, 0, 2, 3, 0, 1, 0};
+	std::size_t size = 7;
 	
 	int i = -1, j = -1;
 
-	Status ret = two_sum(data, size, 13, i, j);
+	Status ret = move_zeros(data, size);
 	
-	if( Status::OK == ret ) {
-		LOG("Found: " << i << "," << j);
-		std::cout << "Result: [" << i << "," << j << "]" << std::endl;
+	if( ret == Status::OK ) {
+		std::cout << "Result: [" << data[0];
+		for( std::size_t i = 1; i < size; ++i ) {
+			std::cout << "," << data[i];
+		}
+		std::cout << "]" << std::endl;
 	} else {
 		std::cout << "No solution found" << std::endl;
 	}
 	
 	return 0;
 }
-
-

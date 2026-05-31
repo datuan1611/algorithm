@@ -14,7 +14,7 @@
 #include <unordered_map>
 
 //---------------------------------------------------------------------
-// Core logic: Two Sum (STL stype)
+// Core logic: Two Sum (STL style)
 //---------------------------------------------------------------------
 class Solution {
 public:
